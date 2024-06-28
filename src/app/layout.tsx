@@ -8,16 +8,8 @@ import { Container } from "@mui/material";
 const inter = Inter({ subsets: ["latin"] });
 
 const sections = [
-  { title: "Technology", url: "#" },
-  { title: "Design", url: "#" },
-  { title: "Culture", url: "#" },
-  { title: "Business", url: "#" },
-  { title: "Politics", url: "#" },
-  { title: "Opinion", url: "#" },
-  { title: "Science", url: "#" },
-  { title: "Health", url: "#" },
-  { title: "Style", url: "#" },
-  { title: "Travel", url: "#" },
+  { title: "Posts", url: "/posts" },
+  { title: "New post", url: "/posts/create" },
 ];
 
 export const metadata: Metadata = {
@@ -33,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={inter.className}>
-        <Header title="Blog challenge" sections={sections} />
+      <Container maxWidth="lg"><Header title="Blog challenge" sections={sections} /></Container>
         <Container maxWidth="lg">{children}</Container>
         <Footer
           title="Footer"

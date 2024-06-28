@@ -4,6 +4,7 @@ import Grid from "@mui/material/Grid";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import Main from "@/app/Components/Main";
 import Sidebar from "@/app/Components/Sidebar";
+import Post from "@/app/Components/Post";
 import { Box } from "@mui/material";
 
 async function getPostData() {
@@ -28,20 +29,18 @@ const sidebar = {
 };
 
 export default async function Blog() {
+  const posts = await getPostData();
   return (
     <React.Fragment>
       <CssBaseline />
-      <Box sx={{padding: "1rem 0 1rem 0"}}>
+      <Box sx={{ padding: "1rem 0 1rem 0" }}>
         <main>
-          <Grid container spacing={5} key={"the-main-container"}>
-            <Grid item key={"the-main-items"}>
-              <Grid container spacing={5} sx={{ mt: 3 }}>
-                <Main
-                  title="Vijay Challenging blog"
-                  posts={await getPostData()}
-                />
-              </Grid>
-            </Grid>
+          <Grid container spacing={5}>
+            {posts.map((post) => (
+                <Grid item xs={12} md={8} key={post}>
+                  <Post className="markdown">{post}</Post>
+                </Grid>
+              ))}
           </Grid>
         </main>
       </Box>

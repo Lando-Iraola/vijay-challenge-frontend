@@ -34,16 +34,19 @@ export default async function PostById({ params }: { params: { id: string } }) {
     }
 
     return (
-      <main>
-        <Typography component="h2" variant="h5">
-          {postDetailData.title}
-        </Typography>
-        <Typography variant="subtitle1" color="text.secondary">
-          {postDetailData.author}{" "}
-          {new Date(postDetailData.created_at).toLocaleString()}
-        </Typography>
-        <Typography>{postDetailData.content}</Typography>
-      </main>
+      <>
+        <CssBaseline />
+        <main>
+          <Typography component="h2" variant="h5">
+            {postDetailData.title}
+          </Typography>
+          <Typography variant="subtitle1" color="text.secondary">
+            {postDetailData.author}{" "}
+            {new Date(postDetailData.created_at).toLocaleString()}
+          </Typography>
+          <Typography>{postDetailData.content}</Typography>
+        </main>
+      </>
     );
   } catch (Exception) {
     return notFound();
