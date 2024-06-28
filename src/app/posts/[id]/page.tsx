@@ -10,33 +10,7 @@ import Header from "@/app/Components/Header";
 import Footer from "@/app/Components/Footer";
 import { Block } from "@mui/icons-material";
 import { Typography } from "@mui/material";
-import { notFound } from 'next/navigation'
-
-const sections = [
-  { title: "Technology", url: "#" },
-  { title: "Design", url: "#" },
-  { title: "Culture", url: "#" },
-  { title: "Business", url: "#" },
-  { title: "Politics", url: "#" },
-  { title: "Opinion", url: "#" },
-  { title: "Science", url: "#" },
-  { title: "Health", url: "#" },
-  { title: "Style", url: "#" },
-  { title: "Travel", url: "#" },
-];
-
-const sidebar = {
-  title: "About",
-  description: "SoloTodo?",
-  archives: [],
-  social: [
-    {
-      name: "GitHub",
-      icon: GitHubIcon,
-      href: "https://github.com/Lando-Iraola",
-    },
-  ],
-};
+import { notFound } from "next/navigation";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 interface PostsInterface {
@@ -55,35 +29,23 @@ export default async function PostById({ params }: { params: { id: string } }) {
 
     const postDetailData = await postDetails.json();
 
-    if(postDetails.status === 404)
-    {
+    if (postDetails.status === 404) {
       throw "Not found";
     }
-  
 
     return (
-      <>
-        <CssBaseline />
-        <Container maxWidth="lg">
-          <Header title="Blog challenge" sections={sections} />
-          <main>
-            <Container>
-              <Typography component="h2" variant="h5">
-                {postDetailData.title}
-              </Typography>
-              <Typography variant="subtitle1" color="text.secondary">
-                {postDetailData.author}{" "}
-                {new Date(postDetailData.created_at).toLocaleString()}
-              </Typography>
-              <Typography>{postDetailData.content}</Typography>
-            </Container>
-          </main>
-        </Container>
-        <Footer
-          title="Footer"
-          description="Something here to give the footer a purpose!"
-        />
-      </>
+      <main>
+        <Typography component="h2" variant="h5">
+          {postDetailData.title}
+        </Typography>
+        <Typography variant="subtitle1" color="text.secondary">
+          {postDetailData.author}{" "}
+          {new Date(postDetailData.created_at).toLocaleString()}
+        </Typography>
+        <Typography>{postDetailData.content}</Typography>
+      </main>
     );
-  } catch (Exception) {return notFound()}
+  } catch (Exception) {
+    return notFound();
+  }
 }

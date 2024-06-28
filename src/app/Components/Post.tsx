@@ -18,7 +18,7 @@ export default function Post(props: any) {
             {title}
           </Typography>
           <Typography variant="subtitle1" color="text.secondary">
-            {new Date(created_at).toLocaleString()}
+            {author} {new Date(created_at).toLocaleString()}
           </Typography>
           <Typography variant="subtitle1" color="primary">
             Ver más
