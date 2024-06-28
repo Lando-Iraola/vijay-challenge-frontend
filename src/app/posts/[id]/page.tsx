@@ -55,6 +55,12 @@ export default async function PostById({ params }: { params: { id: string } }) {
 
     const postDetailData = await postDetails.json();
 
+    if(postDetails.status === 404)
+    {
+      throw "Not found";
+    }
+  
+
     return (
       <>
         <CssBaseline />
