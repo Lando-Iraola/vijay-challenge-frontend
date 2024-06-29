@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
-import { Container } from "@mui/material";
+import { Container, Box } from "@mui/material";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,11 +25,15 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={inter.className}>
-      <Container maxWidth="lg"><Header title="Blog challenge" sections={sections} /></Container>
-        <Container maxWidth="lg">{children}</Container>
+        <Container maxWidth="lg">
+          <Header title="Blog challenge" sections={sections} />
+        </Container>
+        <Container maxWidth="lg">
+          <Box sx={{ padding: "1rem 0 1rem 0" }}>{children}</Box>
+        </Container>
         <Footer
-          title="Footer"
-          description="Something here to give the footer a purpose!"
+          title="Challenging Blog"
+          description="Backend in Django rest framework. Frontend in Next.js and MUI"
         />
       </body>
     </html>
