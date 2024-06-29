@@ -2,10 +2,12 @@
 import * as React from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import {
+  Box,
   Button,
   FormControl,
   FormLabel,
   InputLabel,
+  Stack,
   TextareaAutosize,
   TextField,
   Typography,
@@ -33,13 +35,12 @@ export default function Create() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({...formData, author: "Lando"}),
+      body: JSON.stringify({ ...formData, author: "Lando" }),
     });
 
-    if(create.status === 201)
-    {
+    if (create.status === 201) {
       const data = await create.json();
-      window.location.replace(`/posts/${data.id}`)
+      window.location.replace(`/posts/${data.id}`);
     }
   };
 
@@ -48,29 +49,39 @@ export default function Create() {
       <CssBaseline />
 
       <main>
-        <form onSubmit={handleSubmit}>
-          <FormControl>
-            <TextField
-              id="title"
-              name="title"
-              label="Titulo"
-              variant="standard"
-              required
-              onChange={handleChange}
-            />
-            <FormLabel htmlFor="content" required>
-              Contenido
-            </FormLabel>
-            <TextareaAutosize
-              id="content"
-              name="content"
-              onChange={handleChange}
-            />
-            <Button type="submit" variant="contained">
-              Submit
-            </Button>
-          </FormControl>
-        </form>
+        <Box px={5}>
+          <form onSubmit={handleSubmit}>
+            <FormControl fullWidth px={150}>
+              <Stack direction="column" spacing={3}>
+                <TextField
+                  id="title"
+                  name="title"
+                  label="Titulo"
+                  variant="standard"
+                  required
+                  onChange={handleChange}
+                />
+                <FormLabel htmlFor="content" required>
+                  Contenido
+                </FormLabel>
+
+                <TextareaAutosize
+                  id="content"
+                  name="content"
+                  onChange={handleChange}
+                  maxLength={200}
+                  minRows={5}
+                />
+
+                <Box justifyContent="end">
+                  <Button type="submit" variant="contained">
+                    Submit
+                  </Button>
+                </Box>
+              </Stack>
+            </FormControl>
+          </form>
+        </Box>
       </main>
     </>
   );

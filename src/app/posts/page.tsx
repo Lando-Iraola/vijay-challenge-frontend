@@ -5,8 +5,15 @@ import { useRouter } from "next/router";
 import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
 import Post from "@/app/Components/Post";
-import { Link, Pagination, PaginationItem, Stack } from "@mui/material";
-import { Padding } from "@mui/icons-material";
+import {
+  Link,
+  Pagination,
+  PaginationItem,
+  Stack,
+  Skeleton,
+  Box,
+} from "@mui/material";
+import { Block } from "@mui/icons-material";
 
 async function getPostData(currentPage?: number | string) {
   const queryString = currentPage !== "" ? `/?page=${currentPage}` : "";
@@ -24,8 +31,10 @@ async function getPostData(currentPage?: number | string) {
     return { error: "unknown" };
   }
   const postData = await postRequest.json();
-  console.log(postData);
-  postData["pages"] = Math.round(postData.count / postData.results.length);
+
+  const knownItemsPerPage = 6;
+  postData["pages"] = Math.ceil(postData.count / knownItemsPerPage);
+
   return postData;
 }
 
@@ -48,7 +57,6 @@ export default function Blog({
   ) => {
     React.navigate("/page");
   };
-  console.log("works?", posts?.error === 404);
 
   return (
     <React.Fragment>
@@ -56,23 +64,39 @@ export default function Blog({
       <main>
         <Stack spacing={2}>
           {(posts && posts?.results?.length >= 1 && (
-            <Grid container spacing={5}>
-              {posts.results.map((post) => (
-                <Grid item xs={6} key={post.id}>
-                  <Post className="markdown">{post}</Post>
-                </Grid>
-              ))}
-            </Grid>
+            <>
+              <Grid container spacing={5}>
+                {posts.results.map((post) => (
+                  <Grid item xs={6} key={post.id}>
+                    <Post>{post}</Post>
+                  </Grid>
+                ))}
+              </Grid>
+              <Box px={3}>
+                {posts && posts?.results?.length >= 1 && (
+                  <Pagination count={posts.pages} page={1}></Pagination>
+                )}
+              </Box>
+            </>
           )) ||
-            (posts?.error === "404" && notFound()) || <p>{":)"}</p>}
-          {posts && posts?.results?.length >= 1 && (
-            <Pagination
-              count={posts.pages}
-              page={1}
-            >
-              <PaginationItem component={Link} to={"/posts?page=1"}></PaginationItem>
-            </Pagination>
-          )}
+            (posts?.error === "404" && notFound()) || (
+              <>
+                <Grid container spacing={5}>
+                  {[1, 2, 3, 4, 5, 6].map((num) => (
+                    <Grid item xs={6} key={num}>
+                      <Skeleton variant="rectangular" height={120} />{" "}
+                    </Grid>
+                  ))}
+                </Grid>
+                <Box px={5}>
+                  <Stack direction="row" spacing={2} p={0}>
+                    <Skeleton variant="circular" width={20} />
+                    <Skeleton variant="rectangular" width={60} />
+                    <Skeleton variant="circular" width={20} />
+                  </Stack>
+                </Box>
+              </>
+            )}
         </Stack>
       </main>
     </React.Fragment>
