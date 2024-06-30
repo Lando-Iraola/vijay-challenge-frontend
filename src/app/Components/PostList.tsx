@@ -1,9 +1,7 @@
 "use client";
 import * as React from "react";
 import {
-  Link,
   Pagination,
-  PaginationItem,
   Stack,
   Skeleton,
   Box,
@@ -12,6 +10,7 @@ import {
 import Post from "./Post";
 import EmptyPostList from "./EmptyPostList";
 import { useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 
 async function getPostData(currentPage?: number | string) {
   const queryString = currentPage !== "" ? `/?page=${currentPage}` : "";

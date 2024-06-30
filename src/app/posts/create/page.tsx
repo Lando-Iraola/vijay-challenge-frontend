@@ -6,13 +6,10 @@ import {
   Button,
   FormControl,
   FormLabel,
-  InputLabel,
   Stack,
   TextareaAutosize,
   TextField,
-  Typography,
 } from "@mui/material";
-import { title } from "process";
 import { useRouter } from "next/navigation";
 
 export default function Create() {
