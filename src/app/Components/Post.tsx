@@ -1,14 +1,11 @@
 import * as React from "react";
 import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
-import Box from "@mui/material/Box";
-import { Container } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardContent from "@mui/material/CardContent";
 
 export default function Post(props: any) {
-  const { id, title, content, author, created_at } = props.children;
+  const { id, title, author, created_at } = props.children;
   const href = `/posts/${id}`;
   return (
     <CardActionArea component="a" href={href}>

@@ -13,7 +13,7 @@ export default async function Blog({
     <React.Fragment>
       <CssBaseline />
       <main>
-       <PostList searchParams={searchParams}></PostList>
+        <PostList searchParams={searchParams}></PostList>
       </main>
     </React.Fragment>
   );

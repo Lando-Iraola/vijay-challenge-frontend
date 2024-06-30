@@ -1,10 +1,28 @@
 "use client";
 import * as React from "react";
-import { Pagination, Stack, Skeleton, Box, Grid } from "@mui/material";
+import { Pagination, Stack, Box, Grid } from "@mui/material";
 import Post from "./Post";
 import EmptyPostList from "./EmptyPostList";
 import { useRouter, useSearchParams } from "next/navigation";
 import { notFound } from "next/navigation";
+import PostListSkeleton from "./PostListSkeleton";
+
+interface PostItem {
+  id: number;
+  author: string;
+  title: string;
+  content: string;
+  created_at: Date;
+}
+
+interface PostData {
+  count?: number;
+  next?: string | null;
+  previous?: string | null;
+  results?: ReadonlyArray<PostItem>;
+  pages?: number | null;
+  error?: string | null;
+}
 
 async function getPostData(currentPage?: number | string) {
   const queryString = currentPage !== "" ? `/?page=${currentPage}` : "";
@@ -21,10 +39,11 @@ async function getPostData(currentPage?: number | string) {
   if (postRequest.status !== 200) {
     return { error: "unknown" };
   }
-  const postData = await postRequest.json();
 
-  const knownItemsPerPage = 6;
-  postData["pages"] = Math.ceil(postData.count / knownItemsPerPage);
+  const postData: PostData = await postRequest.json();
+
+  const knownItemsPerPage: number = 6;
+  postData.pages = Math.ceil(postData.count! / knownItemsPerPage);
 
   return postData;
 }
@@ -36,66 +55,61 @@ export default function PostList({
     page?: string;
   };
 }) {
-  const [posts, setPosts] = React.useState(null);
-  const [page, setPage] = React.useState(Number(searchParams?.page) || 1);
+  const [posts, setPosts] = React.useState<PostData>();
+  const [page, setPage] = React.useState<number>(
+    Number(searchParams?.page) || 1
+  );
   const router = useRouter();
   const sP = useSearchParams();
 
   React.useEffect(() => {
-    getPostData(page).then((data) => setPosts(data));
+    console.log(page);
+  }, []);
+
+  React.useEffect(() => {
     router.push(`/posts?page=${page}`);
-    router.refresh()
   }, [page]);
 
   React.useEffect(() => {
-    setPage(sP.get('page'));
-  }, [sP])
+    setPage(Number(sP.get("page")) || 1);
+    getPostData(page).then((data) => setPosts(data));
+  }, [sP]);
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
 
+  if (!posts) {
+    return <PostListSkeleton></PostListSkeleton>;
+  }
+
+  if (posts && posts.results!.length === 0) {
+    return <EmptyPostList />;
+  }
+
+  if (posts && posts.error && posts.error === "404") {
+    console.log("i don't believe you", posts.error)
+    return notFound();
+  }
+
   return (
     <Stack spacing={2}>
-      {(posts && posts?.results?.length >= 1 && (
-        <>
-          <Grid container spacing={2} padding={0} margin={0}>
-            {posts.results.map((post) => (
-              <Grid item xs={6} key={post.id}>
-                <Post>{post}</Post>
-              </Grid>
-            ))}
+      <Grid container spacing={2} padding={0} margin={0}>
+        {posts.results!.map((post) => (
+          <Grid item xs={6} key={post.id}>
+            <Post>{post}</Post>
           </Grid>
-          <Box>
-            {posts && posts?.results?.length >= 1 && (
-              <Pagination
-                count={posts.pages}
-                page={page}
-                onChange={handleChange}
-              ></Pagination>
-            )}
-          </Box>
-        </>
-      )) ||
-        (posts?.error === "404" && notFound()) ||
-        (posts && posts?.results?.length === 0 && <EmptyPostList />) || (
-          <>
-            <Grid container spacing={2} padding={0} margin={0}>
-              {[1, 2, 3, 4, 5, 6].map((num) => (
-                <Grid item xs={6} key={num}>
-                  <Skeleton variant="rectangular" height={120} />{" "}
-                </Grid>
-              ))}
-            </Grid>
-            <Box px={2} mx={0}>
-              <Stack direction="row" spacing={2} p={0} padding={0} margin={0}>
-                <Skeleton variant="circular" width={20} />
-                <Skeleton variant="rectangular" width={60} />
-                <Skeleton variant="circular" width={20} />
-              </Stack>
-            </Box>
-          </>
+        ))}
+      </Grid>
+      <Box>
+        {posts && posts.results && posts.results.length >= 1 && (
+          <Pagination
+            count={posts.pages!}
+            page={page}
+            onChange={handleChange}
+          ></Pagination>
         )}
+      </Box>
     </Stack>
   );
 }

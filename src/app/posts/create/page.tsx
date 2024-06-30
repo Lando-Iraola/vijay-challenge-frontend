@@ -25,7 +25,8 @@ export default function Create() {
     }
   }, []);
 
-  const handleChange = (event) => {
+  const handleChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (event) => {
+    console.log(event)
     const { name, value } = event.target;
     setFormData({
       ...formData,
@@ -33,7 +34,7 @@ export default function Create() {
     });
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
     const create = await fetch("http://localhost:8000/api/posts/", {
       method: "POST",
@@ -57,7 +58,7 @@ export default function Create() {
       <main>
         <Box px={5}>
           <form onSubmit={handleSubmit}>
-            <FormControl fullWidth px={150}>
+            <FormControl fullWidth>
               <Stack direction="column" spacing={3}>
                 <TextField
                   id="title"

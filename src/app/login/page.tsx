@@ -18,19 +18,20 @@ import {
 
 export default function Blog() {
   const [formData, setFormData] = React.useState({
-    title: "",
-    content: "",
+    username: "",
+    password: "",
   });
 
-  const handleChange = (event) => {
+  const handleChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (event) => {
     const { name, value } = event.target;
+    console.log("event?", event.target, name, value)
     setFormData({
       ...formData,
       [name]: value,
     });
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
     const login = await fetch("http://localhost:8000/api/token/", {
       method: "POST",

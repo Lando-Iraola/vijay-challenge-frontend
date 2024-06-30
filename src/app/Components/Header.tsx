@@ -4,6 +4,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
+import { Box } from "@mui/material";
 
 interface HeaderProps {
   sections: ReadonlyArray<{
@@ -13,20 +14,16 @@ interface HeaderProps {
   title: string;
 }
 
-interface Token{
-  token: null | string
-}
-
 export default function Header(props: HeaderProps) {
   const { sections, title } = props;
-  const [ token, setToken ] = React.useState<Token>({token: null})
+  const [ token, setToken ] = React.useState<string | null>()
 
   React.useEffect(() => {
     setToken(sessionStorage.getItem("jwt"));
   }, [])
 
   return (
-    <React.Fragment>
+    <Box>
       <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Typography
           component="h2"
@@ -67,6 +64,6 @@ export default function Header(props: HeaderProps) {
           </Link>
         ))}
       </Toolbar>
-    </React.Fragment>
+    </Box>
   );
 }
