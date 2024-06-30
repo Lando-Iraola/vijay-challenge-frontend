@@ -24,7 +24,6 @@ export default function Blog() {
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (event) => {
     const { name, value } = event.target;
-    console.log("event?", event.target, name, value)
     setFormData({
       ...formData,
       [name]: value,
@@ -43,7 +42,6 @@ export default function Blog() {
 
     if (login.status === 200) {
       const data = await login.json();
-      console.log(data);
 
       sessionStorage.setItem("jwt", data.access);
 

@@ -26,7 +26,6 @@ export default function Create() {
   }, []);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (event) => {
-    console.log(event)
     const { name, value } = event.target;
     setFormData({
       ...formData,

@@ -63,16 +63,13 @@ export default function PostList({
   const sP = useSearchParams();
 
   React.useEffect(() => {
-    console.log(page);
-  }, []);
-
-  React.useEffect(() => {
     router.push(`/posts?page=${page}`);
   }, [page]);
 
   React.useEffect(() => {
-    setPage(Number(sP.get("page")) || 1);
-    getPostData(page).then((data) => setPosts(data));
+    const currentPage: number = Number(sP.get("page")) || 1;
+    setPage(currentPage);
+    getPostData(currentPage).then((data) => setPosts(data));
   }, [sP]);
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -88,7 +85,6 @@ export default function PostList({
   }
 
   if (posts && posts.error && posts.error === "404") {
-    console.log("i don't believe you", posts.error)
     return notFound();
   }
 

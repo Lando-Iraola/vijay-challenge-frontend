@@ -25,12 +25,12 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={inter.className}>
-        <Container maxWidth="lg">
+        
           <Header title="Blog challenge" sections={sections} />
-        </Container>
-        <Container maxWidth="lg">
-          <Box sx={{ padding: "1rem 0 1rem 0" }}>{children}</Box>
-        </Container>
+        
+        
+          <Box py={1} m='auto' maxWidth={1200}>{children}</Box>
+        
         <Footer
           title="Challenging Blog"
           description="Backend in Django rest framework. Frontend in Next.js and MUI"
