@@ -35,7 +35,7 @@ export default function Create() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...formData, author: "Lando" }),
+      body: JSON.stringify({ ...formData, author: 1 }),
     });
 
     if (create.status === 201) {

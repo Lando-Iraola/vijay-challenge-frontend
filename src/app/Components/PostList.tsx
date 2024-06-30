@@ -10,6 +10,7 @@ import {
   Grid
 } from "@mui/material";
 import Post from "./Post";
+import EmptyPostList from "./EmptyPostList";
 
 async function getPostData(currentPage?: number | string) {
   const queryString = currentPage !== "" ? `/?page=${currentPage}` : "";
@@ -64,7 +65,9 @@ export default function PostList({
           </Box>
         </>
       )) ||
-        (posts?.error === "404" && notFound()) || (
+        (posts?.error === "404" && notFound()) ||
+        ((posts && posts?.results?.length === 0) && <EmptyPostList />)
+        || (
           <>
             <Grid container spacing={2} padding={0} margin={0}>
               {[1, 2, 3, 4, 5, 6].map((num) => (

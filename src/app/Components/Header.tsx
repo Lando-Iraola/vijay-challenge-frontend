@@ -29,7 +29,7 @@ export default function Header(props: HeaderProps) {
           {title}
         </Typography>
         <Button variant="outlined" size="small">
-          Sign up
+          Logout
         </Button>
       </Toolbar>
       <Toolbar
