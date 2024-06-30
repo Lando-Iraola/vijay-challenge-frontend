@@ -1,8 +1,9 @@
-import * as React from 'react';
-import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
+"use client";
+import * as React from "react";
+import Toolbar from "@mui/material/Toolbar";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
 
 interface HeaderProps {
   sections: ReadonlyArray<{
@@ -17,7 +18,7 @@ export default function Header(props: HeaderProps) {
 
   return (
     <React.Fragment>
-      <Toolbar sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Typography
           component="h2"
           variant="h5"
@@ -28,14 +29,21 @@ export default function Header(props: HeaderProps) {
         >
           {title}
         </Typography>
-        <Button variant="outlined" size="small">
-          Logout
-        </Button>
+
+        {(sessionStorage.getItem("jwt") && (
+          <Button variant="outlined" size="small" href="/logout">
+            Logout
+          </Button>
+        )) || (
+          <Button variant="outlined" size="small" href="/login">
+            Log in
+          </Button>
+        )}
       </Toolbar>
       <Toolbar
         component="nav"
         variant="dense"
-        sx={{ justifyContent: 'end', overflowX: 'auto' }}
+        sx={{ justifyContent: "end", overflowX: "auto" }}
       >
         {sections.map((section) => (
           <Link

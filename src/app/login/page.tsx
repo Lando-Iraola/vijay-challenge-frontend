@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import CssBaseline from "@mui/material/CssBaseline";
 import IconButton from "@mui/material/IconButton";
 import Input from "@mui/material/Input";
@@ -38,17 +38,22 @@ export default function Blog() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const create = await fetch("http://localhost:8000/api/posts/", {
+    const login = await fetch("http://localhost:8000/api/token/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...formData, author: 1 }),
+      body: JSON.stringify({ ...formData}),
     });
 
-    if (create.status === 201) {
-      const data = await create.json();
-      window.location.replace(`/posts/${data.id}`);
+    if (login.status === 200) {
+      
+      const data = await login.json();
+      console.log(data)
+
+      sessionStorage.setItem("jwt", data.access);
+      
+      window.location.replace(`/posts`);
     }
   };
 
@@ -61,6 +66,14 @@ export default function Blog() {
   ) => {
     event.preventDefault();
   };
+
+  const router = useRouter();
+  React.useEffect(() => {
+    if(sessionStorage.getItem("jwt"))
+      {
+        router.push("/")      
+      }
+  }, [])
   return (
     <React.Fragment>
       <CssBaseline />
@@ -69,22 +82,23 @@ export default function Blog() {
           <form onSubmit={handleSubmit}>
             <Stack direction="column" spacing={3} maxWidth={"30rem"} justifyContent="end">
               <FormControl>
-                <InputLabel htmlFor="user">Usuario</InputLabel>
+                <InputLabel htmlFor="username">Usuario</InputLabel>
                 <FilledInput
-                  id="user"
-                  name="user"
+                  id="username"
+                  name="username"
                   type="text"
                   required
                   onChange={handleChange}
                 />
               </FormControl>
               <FormControl>
-                <InputLabel htmlFor="filled-adornment-password">
+                <InputLabel htmlFor="password">
                   Password
                 </InputLabel>
 
                 <FilledInput
-                  id="filled-adornment-password"
+                  id="password"
+                  name="password"
                   required
                   type={showPassword ? "text" : "password"}
                   onChange={handleChange}

@@ -13,12 +13,22 @@ import {
   Typography,
 } from "@mui/material";
 import { title } from "process";
+import { useRouter } from "next/navigation";
 
 export default function Create() {
   const [formData, setFormData] = React.useState({
     title: "",
     content: "",
   });
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if(!sessionStorage.getItem("jwt"))
+      {
+        router.push("/login")      
+      }
+  }, [])
+
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -33,16 +43,19 @@ export default function Create() {
     const create = await fetch("http://localhost:8000/api/posts/", {
       method: "POST",
       headers: {
+        'Authorization': `Bearer ${window.sessionStorage.getItem("jwt")}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...formData, author: 1 }),
+      body: JSON.stringify({ ...formData })
     });
 
     if (create.status === 201) {
       const data = await create.json();
-      window.location.replace(`/posts/${data.id}`);
+      router.push(`/posts/${data.id}`);
     }
   };
+
+ 
 
   return (
     <>
