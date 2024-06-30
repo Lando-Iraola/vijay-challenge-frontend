@@ -15,6 +15,11 @@ interface HeaderProps {
 
 export default function Header(props: HeaderProps) {
   const { sections, title } = props;
+  const [ token, setToken ] = React.useState(null)
+
+  React.useEffect(() => {
+    setToken(sessionStorage.getItem("jwt"));
+  }, [])
 
   return (
     <React.Fragment>
@@ -30,7 +35,7 @@ export default function Header(props: HeaderProps) {
           {title}
         </Typography>
 
-        {(sessionStorage.getItem("jwt") && (
+        {(token && (
           <Button variant="outlined" size="small" href="/logout">
             Logout
           </Button>

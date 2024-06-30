@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import Post from "./Post";
 import EmptyPostList from "./EmptyPostList";
+import { useRouter } from "next/navigation";
 
 async function getPostData(currentPage?: number | string) {
   const queryString = currentPage !== "" ? `/?page=${currentPage}` : "";
@@ -43,10 +44,18 @@ export default function PostList({
     };
   }) {
   const [posts, setPosts] = React.useState(null);
-  const currentPage = Number(searchParams?.page) || "";
+  const [page, setPage] = React.useState(Number(searchParams?.page) || 1);
+  const router = useRouter();
+
   React.useEffect(() => {
-    getPostData(currentPage).then((data) => setPosts(data));
-  }, []);
+    getPostData(page).then((data) => setPosts(data));
+    router.push(`/posts?page=${page}`);
+  }, [page]);
+
+  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
+
   return (
     <Stack spacing={2}>
       {(posts && posts?.results?.length >= 1 && (
@@ -60,7 +69,7 @@ export default function PostList({
           </Grid>
           <Box>
             {posts && posts?.results?.length >= 1 && (
-              <Pagination count={posts.pages} page={1}></Pagination>
+              <Pagination count={posts.pages} page={page} onChange={handleChange}></Pagination>
             )}
           </Box>
         </>
