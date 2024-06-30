@@ -13,9 +13,13 @@ interface HeaderProps {
   title: string;
 }
 
+interface Token{
+  token: null | string
+}
+
 export default function Header(props: HeaderProps) {
   const { sections, title } = props;
-  const [ token, setToken ] = React.useState(null)
+  const [ token, setToken ] = React.useState<Token>({token: null})
 
   React.useEffect(() => {
     setToken(sessionStorage.getItem("jwt"));

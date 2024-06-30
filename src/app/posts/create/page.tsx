@@ -20,12 +20,10 @@ export default function Create() {
   const router = useRouter();
 
   React.useEffect(() => {
-    if(!sessionStorage.getItem("jwt"))
-      {
-        router.push("/login")      
-      }
-  }, [])
-
+    if (!sessionStorage.getItem("jwt")) {
+      router.push("/login");
+    }
+  }, []);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -40,10 +38,10 @@ export default function Create() {
     const create = await fetch("http://localhost:8000/api/posts/", {
       method: "POST",
       headers: {
-        'Authorization': `Bearer ${window.sessionStorage.getItem("jwt")}`,
+        Authorization: `Bearer ${window.sessionStorage.getItem("jwt")}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...formData })
+      body: JSON.stringify({ ...formData }),
     });
 
     if (create.status === 201) {
@@ -51,8 +49,6 @@ export default function Create() {
       router.push(`/posts/${data.id}`);
     }
   };
-
- 
 
   return (
     <>

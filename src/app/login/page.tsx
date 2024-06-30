@@ -13,6 +13,7 @@ import {
   FormControl,
   InputLabel,
   Stack,
+  Typography,
 } from "@mui/material";
 
 export default function Blog() {
@@ -36,16 +37,15 @@ export default function Blog() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...formData}),
+      body: JSON.stringify({ ...formData }),
     });
 
     if (login.status === 200) {
-      
       const data = await login.json();
-      console.log(data)
+      console.log(data);
 
       sessionStorage.setItem("jwt", data.access);
-      
+
       window.location.replace(`/posts`);
     }
   };
@@ -62,18 +62,23 @@ export default function Blog() {
 
   const router = useRouter();
   React.useEffect(() => {
-    if(sessionStorage.getItem("jwt"))
-      {
-        router.push("/")      
-      }
-  }, [])
+    if (sessionStorage.getItem("jwt")) {
+      router.push("/");
+    }
+  }, []);
   return (
     <React.Fragment>
       <CssBaseline />
       <main>
         <Box px={10} justifyContent="center">
           <form onSubmit={handleSubmit}>
-            <Stack direction="column" spacing={3} maxWidth={"30rem"} justifyContent="end">
+            <Stack
+              direction="column"
+              spacing={3}
+              maxWidth={"30rem"}
+              justifySelf="center"
+              className="loginForm"
+            >
               <FormControl>
                 <InputLabel htmlFor="username">Usuario</InputLabel>
                 <FilledInput
@@ -85,9 +90,7 @@ export default function Blog() {
                 />
               </FormControl>
               <FormControl>
-                <InputLabel htmlFor="password">
-                  Password
-                </InputLabel>
+                <InputLabel htmlFor="password">Password</InputLabel>
 
                 <FilledInput
                   id="password"
@@ -118,6 +121,11 @@ export default function Blog() {
               </FormControl>
             </Stack>
           </form>
+          <Box py={5}>
+            <Typography variant="caption">
+              Nota: Utilizar las credenciales del django admin
+            </Typography>
+          </Box>
         </Box>
       </main>
     </React.Fragment>

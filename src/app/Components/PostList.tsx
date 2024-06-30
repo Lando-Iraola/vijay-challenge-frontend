@@ -1,15 +1,9 @@
 "use client";
 import * as React from "react";
-import {
-  Pagination,
-  Stack,
-  Skeleton,
-  Box,
-  Grid
-} from "@mui/material";
+import { Pagination, Stack, Skeleton, Box, Grid } from "@mui/material";
 import Post from "./Post";
 import EmptyPostList from "./EmptyPostList";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { notFound } from "next/navigation";
 
 async function getPostData(currentPage?: number | string) {
@@ -36,20 +30,26 @@ async function getPostData(currentPage?: number | string) {
 }
 
 export default function PostList({
-    searchParams,
-  }: {
-    searchParams?: {
-      page?: string;
-    };
-  }) {
+  searchParams,
+}: {
+  searchParams?: {
+    page?: string;
+  };
+}) {
   const [posts, setPosts] = React.useState(null);
   const [page, setPage] = React.useState(Number(searchParams?.page) || 1);
   const router = useRouter();
+  const sP = useSearchParams();
 
   React.useEffect(() => {
     getPostData(page).then((data) => setPosts(data));
     router.push(`/posts?page=${page}`);
+    router.refresh()
   }, [page]);
+
+  React.useEffect(() => {
+    setPage(sP.get('page'));
+  }, [sP])
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
@@ -68,14 +68,17 @@ export default function PostList({
           </Grid>
           <Box>
             {posts && posts?.results?.length >= 1 && (
-              <Pagination count={posts.pages} page={page} onChange={handleChange}></Pagination>
+              <Pagination
+                count={posts.pages}
+                page={page}
+                onChange={handleChange}
+              ></Pagination>
             )}
           </Box>
         </>
       )) ||
         (posts?.error === "404" && notFound()) ||
-        ((posts && posts?.results?.length === 0) && <EmptyPostList />)
-        || (
+        (posts && posts?.results?.length === 0 && <EmptyPostList />) || (
           <>
             <Grid container spacing={2} padding={0} margin={0}>
               {[1, 2, 3, 4, 5, 6].map((num) => (
