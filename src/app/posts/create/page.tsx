@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   FormControl,
+  FormHelperText,
   FormLabel,
   Stack,
   TextareaAutosize,
@@ -17,6 +18,12 @@ export default function Create() {
     title: "",
     content: "",
   });
+  const [titleError, setTitleError] = React.useState<boolean>(false);
+  const [titleErrorMessage, setTitleErrorMessage] =
+    React.useState<boolean>(false);
+  const [contentError, setContentError] = React.useState<boolean>(false);
+  const [contentErrorMessage, setContentErrorMessage] =
+    React.useState<string>("");
   const router = useRouter();
 
   React.useEffect(() => {
@@ -25,7 +32,9 @@ export default function Create() {
     }
   }, []);
 
-  const handleChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (event) => {
+  const handleChange: React.ChangeEventHandler<
+    HTMLInputElement | HTMLTextAreaElement
+  > = (event) => {
     const { name, value } = event.target;
     setFormData({
       ...formData,
@@ -33,7 +42,9 @@ export default function Create() {
     });
   };
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (
+    event
+  ) => {
     event.preventDefault();
     const create = await fetch("http://localhost:8000/api/posts/", {
       method: "POST",
@@ -48,6 +59,22 @@ export default function Create() {
       const data = await create.json();
       router.push(`/posts/${data.id}`);
     }
+
+    if (create.status === 400) {
+      const data = await create.json();
+      if (data.title) {
+        setTitleError(true);
+        setTitleErrorMessage(data.title);
+      }
+      if (data.content) {
+        setContentError(true);
+        setContentErrorMessage(data.content);
+      }
+    }
+    if (create.status === 401) {
+      sessionStorage.removeItem("jwt");
+      router.push(`/login`);
+    }
   };
 
   return (
@@ -57,8 +84,8 @@ export default function Create() {
       <main>
         <Box px={5}>
           <form onSubmit={handleSubmit}>
-            <FormControl fullWidth>
-              <Stack direction="column" spacing={3}>
+            <Stack direction="column" spacing={3}>
+              <FormControl error={titleError} fullWidth>
                 <TextField
                   id="title"
                   name="title"
@@ -67,10 +94,14 @@ export default function Create() {
                   required
                   onChange={handleChange}
                 />
-                <FormLabel htmlFor="content" required>
-                  Contenido
-                </FormLabel>
-
+                {titleError && (
+                  <FormHelperText>{titleErrorMessage}</FormHelperText>
+                )}
+              </FormControl>
+              <FormLabel htmlFor="content" required>
+                Contenido
+              </FormLabel>
+              <FormControl error={contentError} fullWidth>
                 <TextareaAutosize
                   id="content"
                   name="content"
@@ -78,14 +109,17 @@ export default function Create() {
                   maxLength={200}
                   minRows={5}
                 />
+                {contentError && (
+                  <FormHelperText>{contentErrorMessage}</FormHelperText>
+                )}
+              </FormControl>
 
-                <Box justifyContent="end">
-                  <Button type="submit" variant="contained">
-                    Submit
-                  </Button>
-                </Box>
-              </Stack>
-            </FormControl>
+              <Box justifyContent="end">
+                <Button type="submit" variant="contained">
+                  Submit
+                </Button>
+              </Box>
+            </Stack>
           </form>
         </Box>
       </main>
