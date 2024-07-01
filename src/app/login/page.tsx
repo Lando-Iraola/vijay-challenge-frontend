@@ -11,6 +11,7 @@ import {
   Box,
   Button,
   FormControl,
+  FormHelperText,
   InputLabel,
   Stack,
   Typography,
@@ -46,13 +47,15 @@ export default function Blog() {
       sessionStorage.setItem("jwt", data.access);
 
       window.location.replace(`/posts`);
+      return;
     }
+
+    setError(true);
+
   };
 
-  const [showPassword, setShowPassword] = React.useState(false);
-
+  const [showPassword, setShowPassword] = React.useState<boolean>(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-
   const handleMouseDownPassword = (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -65,6 +68,9 @@ export default function Blog() {
       router.push("/");
     }
   }, []);
+
+  const [error, setError] = React.useState<boolean>(false);
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -111,12 +117,13 @@ export default function Blog() {
                   }
                 />
               </FormControl>
-              <FormControl>
+              <FormControl error={error}>
                 <Box justifyContent="end">
                   <Button type="submit" variant="contained">
                     Submit
                   </Button>
                 </Box>
+                {error && <FormHelperText>Usuario o contraseña incorrecto</FormHelperText>}
               </FormControl>
             </Stack>
           </form>
